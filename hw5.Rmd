@@ -1,0 +1,74 @@
+---
+title: "hw5"
+author: "Shen Liu"
+date: "June 7, 2016"
+output: html_document
+fig_caption: true
+---
+
+## Vis-1
+```{r, echo=FALSE, fig.cap="Figure 1: Monthly Airpassengers Amounts From 1950 To 1960"}
+   library(ggplot2) #loading ggplot2 library
+   data1 <- data.frame(Year = c(floor(time(AirPassengers))), #obtained year info
+                       Month = c(cycle(AirPassengers)), #obtained month infor
+                       Num = c(AirPassengers)) #obtained each month numbers of Passergers
+   data1$Month <- factor(data1$Month)
+   levels(data1$Month) <- month.abb #Converting month numbers to names as string
+   referencelines <- data1 #Draw reference lines
+   colnames(referencelines)[2] <- "groupVar" 
+   ggplot(data1, aes(x = Year, y = Num))+ #input and indicate two dimension
+   geom_line(data = referencelines,  # Plotting the "underlayer"
+             aes(x = Year, y = Num, group = groupVar),
+             colour = "GRAY", alpha = 1/2, size = 1/2)+ 
+   geom_line(size = 1)+ #Plotting the ""overlayer
+   facet_wrap(~ Month)+ 
+   theme_bw() #balck and white theme
+```
+
+## Vis-2
+```{r, echo=FALSE, fig.cap="Figure 2: How Numners of Cylinders affects M.P.G."}
+   library(ggplot2) 
+   data(mtcars)
+   mtcars$gear1 <- factor(mtcars$gear,levels=c(3,4,5),
+  	                     labels=c("3gears","4gears","5gears")) #factor the gear column of dataset
+   mtcars$am <- factor(mtcars$am,levels=c(0,1),
+  	                   labels=c("Automatic","Manual")) #factor the am column
+   mtcars$cyl <- factor(mtcars$cyl,levels=c(4,6,8),
+                        labels=c("4cyl","6cyl","8cyl")) #factor the cyl column
+
+   # plot gas milage based on different gears
+   qplot(mpg, #object to describe
+         data=mtcars, #datasource
+         geom="density", #plot type as desity
+         fill=cyl, #filled by cyl
+         alpha=I(.5), #transperancy level
+         main="Distribution of Gas Milage", #Title
+         xlab="Miles Per Gallon", #x-axis name
+         ylab="Density") #y-axis name
+```
+   
+
+## Vis-3
+```{r, echo=FALSE, fig.cap="Figure 3: How Cars Weigt Affects MPG For 4, 6, 8 Cylinders"}
+   library(ggplot2)
+   qplot(wt, #independent variabble 
+         mpg, #dependent variable
+         data=mtcars, #datasource
+         color=cyl, #treat by different cyl numbers
+         main="Regression of MPG on Weight", #graph title
+         xlab="Weight", #x-axis title
+         ylab="Miles per Gallon") #y-axis title
+```
+
+## Vis-4
+```{r, echo=FALSE, fig.cap="Figure 4: Different M.P.G. performance by Gear Numbers"}
+   library(ggplot2)
+   qplot(mtcars$gear1, #independent variable
+         mtcars$mpg, #dependent variable
+         data=mtcars, #dataset
+         geom=c("boxplot","jitter"), #use boxplot and jitter
+         fill=factor(mtcars$gear1), #different by gears
+         main="Mileage by Gear Number", #graph title
+         xlab="", 
+         ylab="Miles per Gallon") #y-axis title
+```
